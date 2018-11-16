@@ -517,7 +517,7 @@
       <add_time>N</add_time>
       <insertScript>Y</insertScript>
       <script>
-hadoop fs -put /home/hadoop/project_download/cards.json /user/mtg/raw/cards.json</script>
+hadoop fs -put /home/hadoop/project_download/cards.json mtg/raw/cards.json</script>
       <loglevel>Basic</loglevel>
       <parallel>N</parallel>
       <draw>Y</draw>
@@ -595,7 +595,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS cards(
       <add_date>N</add_date>
       <add_time>N</add_time>
       <insertScript>Y</insertScript>
-      <script>hadoop fs -mkdir mtg</script>
+      <script>hadoop fs -mkdir /mtg</script>
       <loglevel>Basic</loglevel>
       <parallel>N</parallel>
       <draw>Y</draw>
@@ -618,7 +618,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS cards(
       <add_date>N</add_date>
       <add_time>N</add_time>
       <insertScript>Y</insertScript>
-      <script>hadoop fs -test -d mtg</script>
+      <script>hadoop fs -test -d /mtg</script>
       <loglevel>Basic</loglevel>
       <parallel>N</parallel>
       <draw>Y</draw>
@@ -641,7 +641,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS cards(
       <add_date>N</add_date>
       <add_time>N</add_time>
       <insertScript>Y</insertScript>
-      <script>hadoop fs -test -f /user/mtg/raw/cards.json</script>
+      <script>hadoop fs -test -f mtg/raw/cards.json</script>
       <loglevel>Basic</loglevel>
       <parallel>N</parallel>
       <draw>Y</draw>
