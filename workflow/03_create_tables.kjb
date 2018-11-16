@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
-  <name>hadoop_flow</name>
+  <name>03_create_tables</name>
   <description/>
   <extended_description/>
   <job_version/>
-  <job_status>0</job_status>
   <directory>/</directory>
   <created_user>-</created_user>
-  <created_date>2018/11/05 17:10:13.470</created_date>
+  <created_date>2018/11/16 15:16:26.904</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/11/05 17:10:13.470</modified_date>
+  <modified_date>2018/11/16 15:16:26.904</modified_date>
   <parameters>
     </parameters>
   <slaveservers>
@@ -292,9 +291,9 @@
     <max_nr_retries/>
     <run_retry_period/>
     <namespace_parameter/>
-    <save_parameters/>
-    <save_result_rows/>
-    <save_result_files/>
+    <save_parameters>Y</save_parameters>
+    <save_result_rows>Y</save_result_rows>
+    <save_result_files>Y</save_result_files>
     <field>
       <id>ID_JOB_RUN</id>
       <enabled>Y</enabled>
@@ -371,8 +370,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>16</xloc>
-      <yloc>208</yloc>
+      <xloc>144</xloc>
+      <yloc>304</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -381,33 +380,11 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1136</xloc>
-      <yloc>208</yloc>
+      <xloc>896</xloc>
+      <yloc>304</yloc>
     </entry>
     <entry>
-      <name>File Exists</name>
-      <description/>
-      <type>FILE_EXISTS</type>
-      <filename>/home/hadoop/project_download\cards.json</filename>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>192</xloc>
-      <yloc>208</yloc>
-    </entry>
-    <entry>
-      <name>Abort job</name>
-      <description/>
-      <type>ABORT</type>
-      <message>Cards.json does not exist</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>192</xloc>
-      <yloc>368</yloc>
-    </entry>
-    <entry>
-      <name>Create HDFS Directory </name>
+      <name>Move File</name>
       <description/>
       <type>SHELL</type>
       <filename/>
@@ -421,16 +398,61 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <insertScript>Y</insertScript>
-      <script>hadoop fs -mkdir /mtg</script>
+      <script>
+hadoop fs -put /home/hadoop/project_download/cards.json mtg/raw/cards.json</script>
       <loglevel>Basic</loglevel>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>400</xloc>
-      <yloc>368</yloc>
+      <xloc>336</xloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
-      <name>Check if MTG directory exists</name>
+      <name>Create Hive Table</name>
+      <description/>
+      <type>SQL</type>
+      <sql>DROP TABLE IF EXISTS cards;
+CREATE EXTERNAL TABLE IF NOT EXISTS cards(
+	name STRING, 
+	artist STRING,
+	text STRING) 
+COMMENT 'MTG Cards' ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
+TERMINATED BY ',' STORED AS TEXTFILE LOCATION '/user/mtg/raw/';
+</sql>
+      <useVariableSubstitution>F</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename/>
+      <sendOneStatement>F</sendOneStatement>
+      <connection/>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>544</xloc>
+      <yloc>304</yloc>
+    </entry>
+    <entry>
+      <name>Create MySQL Table</name>
+      <description/>
+      <type>SQL</type>
+      <sql>DROP TABLE IF EXISTS cards;
+CREATE EXTERNAL TABLE IF NOT EXISTS cards(
+	cardName STRING, 
+	artist STRING,
+	cardText STRING);
+</sql>
+      <useVariableSubstitution>F</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename/>
+      <sendOneStatement>F</sendOneStatement>
+      <connection/>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>720</xloc>
+      <yloc>304</yloc>
+    </entry>
+    <entry>
+      <name>Check if MTG cards exist</name>
       <description/>
       <type>SHELL</type>
       <filename/>
@@ -444,120 +466,19 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <insertScript>Y</insertScript>
-      <script>hadoop fs -test -d /mtg</script>
+      <script>hadoop fs -test -f mtg/raw/cards.json</script>
       <loglevel>Basic</loglevel>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>400</xloc>
-      <yloc>208</yloc>
-    </entry>
-    <entry>
-      <name>Create HDFS raw Directory </name>
-      <description/>
-      <type>SHELL</type>
-      <filename/>
-      <work_directory/>
-      <arg_from_previous>N</arg_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile/>
-      <set_append_logfile>N</set_append_logfile>
-      <logext/>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <insertScript>Y</insertScript>
-      <script>hadoop fs -mkdir mtg/raw</script>
-      <loglevel>Basic</loglevel>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>656</xloc>
-      <yloc>368</yloc>
-    </entry>
-    <entry>
-      <name>Check if MTG raw directory exists </name>
-      <description/>
-      <type>SHELL</type>
-      <filename/>
-      <work_directory/>
-      <arg_from_previous>N</arg_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile/>
-      <set_append_logfile>N</set_append_logfile>
-      <logext/>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <insertScript>Y</insertScript>
-      <script>hadoop fs -test -d mtg/raw</script>
-      <loglevel>Basic</loglevel>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>656</xloc>
-      <yloc>208</yloc>
-    </entry>
-    <entry>
-      <name>Create HDFS raw Directory  2</name>
-      <description/>
-      <type>SHELL</type>
-      <filename/>
-      <work_directory/>
-      <arg_from_previous>N</arg_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile/>
-      <set_append_logfile>N</set_append_logfile>
-      <logext/>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <insertScript>Y</insertScript>
-      <script>hadoop fs -mkdir mtg/final</script>
-      <loglevel>Basic</loglevel>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>944</xloc>
-      <yloc>368</yloc>
-    </entry>
-    <entry>
-      <name>Check if MTG final directory exists </name>
-      <description/>
-      <type>SHELL</type>
-      <filename/>
-      <work_directory/>
-      <arg_from_previous>N</arg_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile/>
-      <set_append_logfile>N</set_append_logfile>
-      <logext/>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <insertScript>Y</insertScript>
-      <script>hadoop fs -test -d mtg/final</script>
-      <loglevel>Basic</loglevel>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>944</xloc>
-      <yloc>208</yloc>
+      <xloc>336</xloc>
+      <yloc>304</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>File Exists</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>START</from>
-      <to>File Exists</to>
+      <to>Check if MTG cards exist</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -565,17 +486,8 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>File Exists</from>
-      <to>Check if MTG directory exists</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Check if MTG directory exists</from>
-      <to>Create HDFS Directory </to>
+      <from>Check if MTG cards exist</from>
+      <to>Move File</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -583,8 +495,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Create HDFS Directory </from>
-      <to>Check if MTG raw directory exists </to>
+      <from>Check if MTG cards exist</from>
+      <to>Create Hive Table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -592,8 +504,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Check if MTG directory exists</from>
-      <to>Check if MTG raw directory exists </to>
+      <from>Create Hive Table</from>
+      <to>Create MySQL Table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -601,52 +513,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Check if MTG raw directory exists </from>
-      <to>Create HDFS raw Directory </to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Create HDFS raw Directory </from>
-      <to>Check if MTG final directory exists </to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Check if MTG final directory exists </from>
-      <to>Create HDFS raw Directory  2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Check if MTG raw directory exists </from>
-      <to>Check if MTG final directory exists </to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Create HDFS raw Directory  2</from>
-      <to>Success</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Check if MTG final directory exists </from>
+      <from>Create MySQL Table</from>
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
