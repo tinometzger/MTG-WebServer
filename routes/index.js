@@ -11,6 +11,7 @@ var connection = mysql.createConnection({
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+    let cards;
     connection.connect();
     connection.query("SELECT * FROM cards;", function (err, result) {
         if (err) {
@@ -18,11 +19,16 @@ router.get('/', function(req, res, next) {
             console.log(err);
         } else {
             console.log("Hat geklappt");
-            console.log(result);
+            cards = result;
+            console.log(cards);
+            res.render('index', {cards});
         }
     });
     connection.end();
-    res.render('index', { title: 'Express' });
+
+
 });
 
+
 module.exports = router;
+
