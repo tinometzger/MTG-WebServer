@@ -2,8 +2,19 @@ extends layout
 
 block content
 
- h1="MTG"
+    h1="MTG WebSearch"
 
- ul#test
-  for card in cards
-    li= card
+    div
+        table#cardtable.table-bordered
+            thead
+                tr
+                    th Name
+                    th Artist
+                    th Text
+            tbody
+                for item in result
+                    tr
+                        td= item.cards_name
+                        td= item.cards_artist
+                        td= item.cards_text
+

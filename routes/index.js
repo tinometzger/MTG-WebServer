@@ -13,15 +13,14 @@ var connection = mysql.createConnection({
 router.get('/', function(req, res, next) {
     let cards;
     connection.connect();
-    connection.query("SELECT * FROM cards;", function (err, result) {
+    connection.query("SELECT cards_name, cards_artist, cards_text FROM cards;", function (err, result) {
         if (err) {
             throw err;
             console.log(err);
         } else {
             console.log("Hat geklappt");
             cards = result;
-            console.log(cards);
-            res.render('index', {cards});
+            res.render('index', {result});
         }
     });
     connection.end();

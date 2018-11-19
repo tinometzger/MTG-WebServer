@@ -486,7 +486,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>896</xloc>
+      <xloc>960</xloc>
       <yloc>304</yloc>
     </entry>
     <entry>
@@ -494,13 +494,28 @@
       <description/>
       <type>SQL</type>
       <sql>DROP TABLE IF EXISTS cards;
-CREATE EXTERNAL TABLE IF NOT EXISTS cards(
+CREATE EXTERNAL TABLE IF NOT EXISTS cards( 
 	name STRING, 
-	artist STRING,
-	text STRING) 
-COMMENT 'MTG Cards' ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
-TERMINATED BY ',' STORED AS TEXTFILE LOCATION '/user/mtg/raw/';
-</sql>
+	manaCost STRING, 
+	cmc INT, 
+	colors STRING, 
+	colorIdentity STRING, 
+	type STRING, 
+	types STRING, 
+	subtypes STRING, 
+	rarity STRING,
+	set STRING, 
+	setName STRING, 
+	text STRING, 
+	flavor STRING, 
+	artist STRING, 
+	power STRING, 
+	toughness STRING, 
+	layout STRING, 
+	multiverseid STRING, 
+	imageUrl STRING) 
+ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'  
+LOCATION 'mtg/raw/';</sql>
       <useVariableSubstitution>F</useVariableSubstitution>
       <sqlfromfile>F</sqlfromfile>
       <sqlfilename/>
@@ -509,7 +524,7 @@ TERMINATED BY ',' STORED AS TEXTFILE LOCATION '/user/mtg/raw/';
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>544</xloc>
+      <xloc>352</xloc>
       <yloc>304</yloc>
     </entry>
     <entry>
@@ -518,9 +533,25 @@ TERMINATED BY ',' STORED AS TEXTFILE LOCATION '/user/mtg/raw/';
       <type>SQL</type>
       <sql>DROP TABLE IF EXISTS cards;
 CREATE EXTERNAL TABLE IF NOT EXISTS cards(
-	cardName STRING, 
-	artist STRING,
-	cardText STRING);
+	name STRING, 
+	manaCost STRING, 
+	cmc INT, 
+	colors STRING, 
+	colorIdentity STRING, 
+	type STRING, 
+	types STRING, 
+	subtypes STRING, 
+	rarity STRING,
+	set STRING, 
+	setName STRING, 
+	text STRING, 
+	flavor STRING, 
+	artist STRING, 
+	power STRING, 
+	toughness STRING, 
+	layout STRING, 
+	multiverseid STRING, 
+	imageUrl STRING);
 </sql>
       <useVariableSubstitution>F</useVariableSubstitution>
       <sqlfromfile>F</sqlfromfile>
@@ -530,7 +561,23 @@ CREATE EXTERNAL TABLE IF NOT EXISTS cards(
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>720</xloc>
+      <xloc>528</xloc>
+      <yloc>304</yloc>
+    </entry>
+    <entry>
+      <name>Entfernen der Doppelten Karten</name>
+      <description/>
+      <type>SQL</type>
+      <sql>DELETE FROM cards WHERE id IS NULL;</sql>
+      <useVariableSubstitution>F</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename/>
+      <sendOneStatement>T</sendOneStatement>
+      <connection>mysql</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>752</xloc>
       <yloc>304</yloc>
     </entry>
   </entries>
@@ -545,15 +592,6 @@ CREATE EXTERNAL TABLE IF NOT EXISTS cards(
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Create MySQL Table</from>
-      <to>Success</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>START</from>
       <to>Create Hive Table</to>
       <from_nr>0</from_nr>
@@ -561,6 +599,24 @@ CREATE EXTERNAL TABLE IF NOT EXISTS cards(
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Create MySQL Table</from>
+      <to>Entfernen der Doppelten Karten</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Entfernen der Doppelten Karten</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>
